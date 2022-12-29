@@ -17,6 +17,18 @@ resource "aws_internet_gateway" "igw" {
 #   internet_gateway_id = aws_internet_gateway.igw.id
 # }
 
+resource "aws_eip" "eip-nat" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "nat-gw" {
+  allocation_id = aws_eip.eip-nat.id
+  subnet_id     = aws_subnet.public_subnet_a.id
+  depends_on = [
+    aws_internet_gateway.igw
+  ]
+}
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -97,15 +109,17 @@ resource "aws_route" "public_subnet_b_routes" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
-# resource "aws_route" "private_subnet_a_routes" {
-#   route_table_id = aws_route_table.private_subnet_a_route_table.id
+resource "aws_route" "private_subnet_a_routes" {
+  route_table_id         = aws_route_table.private_subnet_a_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat-gw.id
+}
 
-# }
-
-# resource "aws_route" "private_subnet_b_routes" {
-#   route_table_id = aws_route_table.private_subnet_b_route_table.id
-
-# }
+resource "aws_route" "private_subnet_b_routes" {
+  route_table_id         = aws_route_table.private_subnet_b_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat-gw.id
+}
 
 resource "aws_security_group" "allow_tls_ingress_to_private_subnet" {
   name        = "allow_tls"
