@@ -9,10 +9,13 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 }
 
-resource "aws_internet_gateway_attachment" "igw_attachment" {
-  vpc_id              = aws_vpc.main.id
-  internet_gateway_id = aws_internet_gateway.igw.id
-}
+# -----------------------------------------
+# Don't need a separate attachment resource
+# -----------------------------------------
+# resource "aws_internet_gateway_attachment" "igw_attachment" {
+#   vpc_id              = aws_vpc.main.id
+#   internet_gateway_id = aws_internet_gateway.igw.id
+# }
 
 data "aws_availability_zones" "available" {
   state = "available"
