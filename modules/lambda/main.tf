@@ -7,7 +7,7 @@ resource "aws_lambda_function" "lambda_function" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name               = var.lambda_role
+  name               = "${var.lambda_function_name}-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_policy.json
 }
 
