@@ -17,3 +17,8 @@ variable "rest_api_stage_name" {
   type        = string
   description = "stage name of the rest api"
 }
+
+variable "vpce_id" {
+  type        = string
+  description = "VPC Endpoint ID for the API Gateway"
+}
