@@ -33,4 +33,8 @@ module "api-gateway" {
   lambda_function_name = var.lambda_function_name
   lambda_function_arn  = module.lambda.lambda_function_arn
   rest_api_stage_name  = var.rest_api_stage_name
+
+  depends_on = [
+    module.lambda
+  ]
 }
