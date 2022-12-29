@@ -109,21 +109,21 @@ resource "aws_security_group" "allow_tls_ingress_to_private_subnet" {
   description = "Allow TLS Inbound Traffic"
   vpc_id      = aws_vpc.main.id
 
-  ingress = [{
+  ingress = {
     cidr_blocks = [aws_vpc.main.cidr_block]
     description = "Inbound TLS"
     from_port   = 443
     protocol    = "tcp"
     to_port     = 443
-  }]
+  }
 
-  egress = [{
+  egress = {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Outgoing Traffic"
     from_port   = 0
     protocol    = "-1"
     to_port     = 0
-  }]
+  }
 }
 
 resource "aws_security_group" "all_outbound_traffic" {
@@ -131,13 +131,13 @@ resource "aws_security_group" "all_outbound_traffic" {
   description = "Allow Outbound Traffic"
   vpc_id      = aws_vpc.main.id
 
-  egress = [{
+  egress = {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Outgoing Traffic"
     from_port   = 0
     protocol    = "-1"
     to_port     = 0
-  }]
+  }
 }
 
 data "aws_region" "current" {}
