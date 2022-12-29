@@ -1,0 +1,4 @@
+.terraform/
+.vscode/
+.DS_Store
+/modules/*/.terraform.lock.hcl
