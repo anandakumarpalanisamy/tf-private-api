@@ -21,7 +21,9 @@ resource "aws_api_gateway_rest_api_policy" "rest_api_vpce_resource_policy" {
           "execute-api:Invoke",
         ],
         Effect   = "Deny",
-        Principal = "*",
+        Principal = {
+          "AWS": "*"
+        },
         Resource = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${data.aws_api_gateway_rest_api.rest_api.id}/*",
         Condition = {
           test = "StringNotEquals"
@@ -36,7 +38,9 @@ resource "aws_api_gateway_rest_api_policy" "rest_api_vpce_resource_policy" {
           "execute-api:Invoke",
         ],
         Effect   = "Allow",
-        Principal = "*",
+        Principal = {
+          "AWS": "*"
+        },
         Resource = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${data.aws_api_gateway_rest_api.rest_api.id}/*",
       }
     ]
