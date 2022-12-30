@@ -7,6 +7,40 @@ resource "aws_api_gateway_rest_api" "rest_api" {
   }
 }
 
+data "aws_api_gateway_rest_api" "rest_api" {
+  name = var.rest_api_name
+}
+
+resource "aws_api_gateway_rest_api_policy" "rest_api_vpce_resource_policy" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "execute-api:Invoke",
+        ],
+        Effect   = "Deny",
+        Resource = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${data.aws_api_gateway_rest_api.rest_api.id}/*",
+        Condition = {
+          test = "StringNotEquals"
+          variable = "aws:sourceVpce",
+          values = [
+            "vpce-08402dd6d0763413a"
+          ]
+        }
+      },
+      {
+        Action = [
+          "execute-api:Invoke",
+        ],
+        Effect   = "Allow",
+        Resource = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${data.aws_api_gateway_rest_api.rest_api.id}/*",
+      }
+    ]
+  })
+}
+
 resource "aws_api_gateway_resource" "rest_api_resource" {
   rest_api_id = aws_api_gateway_rest_api.rest_api.id
   parent_id   = aws_api_gateway_rest_api.rest_api.root_resource_id
